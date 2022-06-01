@@ -1,68 +1,72 @@
 // import { render } from '@testing-library/react';
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import InputForm from './InputForm/InputForm';
 import contactDefault from './DataDefault/Data.json';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 
-export class App extends Component {
-  state = {
-    contacts: contactDefault,
-    filter: '',
-  };
+const CONTACTS_KEY = 'contacts';
 
-  onAddContact = contact => {
-    if (this.state.contacts.some(item => item.name === contact.name)) {
+export default function App() {
+  const [contacts, setContacts] = useState(localStorage.read(CONTACTS_KEY));
+  const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    localStorage.save(CONTACTS_KEY, contacts);
+  }, [contacts]);
+
+  const onAddContact = contact => {
+    if (contacts.some(item => item.name === contact.name)) {
       alert(`${contact.name} is ready in contacts`);
       return;
     }
 
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, contact],
+    setContacts(prevState => ({
+      return: [...prevState, contact],
     }));
   };
 
-  onDeleteContact = contactId => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
-    }));
+  const onDeleteContact = contactId => {
+    setContacts(prevState =>
+      prevState.filter(contact => contact.id !== contactId)
+    );
   };
 
-  onChangeFilter = e => {
-    this.setState({ filter: e.currentTarget.value });
+  const onChangeFilter = event => {
+    setFilter(event.currentTarget.value);
   };
 
-  getAddedContacts = () => {
-    const { filter, contacts } = this.state;
+  const getAddedContacts = () => {
+    // const { filter, contacts } = this.state;
     const toLowerCaseFilter = filter.toLocaleLowerCase();
     return contacts.filter(contact =>
       contact.name.toLocaleLowerCase().includes(toLowerCaseFilter)
     );
   };
 
-  render() {
-    return (
-      <div
-        style={{
-          height: '100vh',
-          justifyContent: 'center',
-          padding: '50px',
-          alignItems: 'center',
-          fontSize: 20,
-          color: '#010101',
-        }}
-      >
-        <h1>Phonebook</h1>
-        <InputForm onSubmit={this.onAddContact} />
-        <h2>Contacts</h2>
-        <Filter value={this.state.filter} onChange={this.onChangeFilter} />
-        <ContactList
-          contacts={this.getAddedContacts()}
-          deleteCont={this.onDeleteContact}
-          // contactsArr={this.getAddedContacts()}
-          // deleteContact={this.onDeleteContact}
-        />
-      </div>
-    );
-  }
+  // render() {
+  return (
+    <div
+      style={{
+        height: '100vh',
+        justifyContent: 'center',
+        padding: '50px',
+        alignItems: 'center',
+        fontSize: 20,
+        color: '#010101',
+      }}
+    >
+      <h1>Phonebook</h1>
+      <InputForm onSubmit={onAddContact} />
+      <h2>Contacts</h2>
+      <Filter value={filter} onChange={onChangeFilter} />
+      <ContactList
+        contacts={getAddedContacts()}
+        deleteCont={onDeleteContact}
+        // contactsArr={this.getAddedContacts()}
+        // deleteContact={this.onDeleteContact}
+      />
+    </div>
+  );
 }
+// }
