@@ -1,14 +1,14 @@
 // import { render } from '@testing-library/react';
 import { useState, useEffect } from 'react';
-import InputForm from './InputForm';
+import { InputForm } from './InputForm';
 // import contactDefault from './DataDefault/Data.json';
-import ContactList from './ContactList';
-import localStorage from './utils/localStorage';
-import Filter from './Filter';
+import { ContactList } from './ContactList';
+import * as localStorage from './utils/localStorage';
+import { Filter } from './Filter';
 
 const CONTACTS_KEY = 'contacts';
 
-export default function App() {
+export const App = () => {
   const [contacts, setContacts] = useState(localStorage.read(CONTACTS_KEY));
   const [filter, setFilter] = useState('');
 
@@ -22,9 +22,9 @@ export default function App() {
       return;
     }
 
-    setContacts(prevState => ({
-      return: [...prevState, contact],
-    }));
+    setContacts(prevState => {
+      return [...prevState, contact];
+    });
   };
 
   const onDeleteContact = contactId => {
@@ -38,7 +38,6 @@ export default function App() {
   };
 
   const getAddedContacts = () => {
-    // const { filter, contacts } = this.state;
     const toLowerCaseFilter = filter.toLocaleLowerCase();
     return contacts.filter(contact =>
       contact.name.toLocaleLowerCase().includes(toLowerCaseFilter)
@@ -69,5 +68,5 @@ export default function App() {
       />
     </div>
   );
-}
+};
 // }
