@@ -1,1 +1,1 @@
-export { default } from './InputForm';
+export { InputForm } from './InputForm';

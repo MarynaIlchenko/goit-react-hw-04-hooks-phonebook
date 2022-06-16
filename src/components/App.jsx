@@ -1,39 +1,20 @@
 // import { render } from '@testing-library/react';
-import {useState, useEffect} from 'react';
-import {InputForm} from './InputForm/InputForm';
+import { useState, useEffect } from 'react';
+import InputForm from './InputForm';
 // import contactDefault from './DataDefault/Data.json';
-import {ContactList} from './components/ContactList';
-import {Filter} from './Filter/Filter';
+import ContactList from './ContactList';
+import localStorage from './utils/localStorage';
+import Filter from './Filter';
 
 const CONTACTS_KEY = 'contacts';
 
-export const App =()=> {
+export default function App() {
   const [contacts, setContacts] = useState(localStorage.read(CONTACTS_KEY));
   const [filter, setFilter] = useState('');
 
-    useEffect(() => {
+  useEffect(() => {
     localStorage.save(CONTACTS_KEY, contacts);
-    }, [contacts]);
-  
-  // componentDidMount() {
-  //   console.log('App componentDidMount');
-  //   const contacts = localStorage.getItem('contacts');
-  //   const parsedContacts = JSON.parse(contacts);
-  //   if (parsedContacts) {
-  //     this.setState({ contacts: parsedContacts });
-  //   }
-  // }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   console.log('ComponentDidUpdate');
-
-  //   if (this.state.contacts !== prevState.contacts) {
-  //     console.log('Обновилось поле contacts');
-  //     localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-  //   }
-    // console.log(prevState);
-    // console.log(this.state);
-  }
+  }, [contacts]);
 
   const onAddContact = contact => {
     if (contacts.some(item => item.name === contact.name)) {
@@ -42,7 +23,7 @@ export const App =()=> {
     }
 
     setContacts(prevState => ({
-      return [...prevState, contact],
+      return: [...prevState, contact],
     }));
   };
 
@@ -52,8 +33,8 @@ export const App =()=> {
     );
   };
 
-  const onChangeFilter = e => {
-    setFilter(e.currentTarget.value);
+  const onChangeFilter = event => {
+    setFilter(event.currentTarget.value);
   };
 
   const getAddedContacts = () => {
@@ -65,28 +46,28 @@ export const App =()=> {
   };
 
   // render() {
-  //   console.log('App render');
-    return (
-      <div
-        style={{
-          height: '100vh',
-          justifyContent: 'center',
-          padding: '50px',
-          alignItems: 'center',
-          fontSize: 20,
-          color: '#010101',
-        }}
-      >
-        <h1>Phonebook</h1>
-        <InputForm onSubmit={onAddContact} />
-        <h2>Contacts</h2>
-        <Filter value={filter} onChange={onChangeFilter} />
-        <ContactList
-          contacts={getAddedContacts()}
-          deleteCont={onDeleteContact}
-          // contactsArr={this.getAddedContacts()}
-          // deleteContact={this.onDeleteContact}
-        />
-      </div>
-    );
-  };
+  return (
+    <div
+      style={{
+        height: '100vh',
+        justifyContent: 'center',
+        padding: '50px',
+        alignItems: 'center',
+        fontSize: 20,
+        color: '#010101',
+      }}
+    >
+      <h1>Phonebook</h1>
+      <InputForm onSubmit={onAddContact} />
+      <h2>Contacts</h2>
+      <Filter value={filter} onChange={onChangeFilter} />
+      <ContactList
+        contacts={getAddedContacts()}
+        deleteCont={onDeleteContact}
+        // contactsArr={this.getAddedContacts()}
+        // deleteContact={this.onDeleteContact}
+      />
+    </div>
+  );
+}
+// }
