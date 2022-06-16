@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import style from './InputForm.module.css';
 import { nanoid } from 'nanoid';
 
-export default function InputForm({ onSubmit }) {
+export const InputForm = ({ onSubmit }) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -71,6 +71,9 @@ export default function InputForm({ onSubmit }) {
       </button>
     </form>
   );
-}
+};
 
+InputForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 // export default InputForm;

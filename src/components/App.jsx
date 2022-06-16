@@ -1,68 +1,71 @@
 // import { render } from '@testing-library/react';
-import React, { Component } from 'react';
-import InputForm from './InputForm/InputForm';
+import {useState, useEffect} from 'react';
+import {InputForm} from './InputForm/InputForm';
 // import contactDefault from './DataDefault/Data.json';
-import ContactList from './components/ContactList';
-import Filter from './Filter/Filter';
+import {ContactList} from './components/ContactList';
+import {Filter} from './Filter/Filter';
 
-export class App extends Component {
-  state = {
-    // contacts: contactDefault,
-    contacts: [],
-    filter: '',
-  };
+const CONTACTS_KEY = 'contacts';
 
-  componentDidMount() {
-    console.log('App componentDidMount');
-    const contacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contacts);
-    if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
-    }
-  }
+export const App =()=> {
+  const [contacts, setContacts] = useState(localStorage.read(CONTACTS_KEY));
+  const [filter, setFilter] = useState('');
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log('ComponentDidUpdate');
+    useEffect(() => {
+    localStorage.save(CONTACTS_KEY, contacts);
+    }, [contacts]);
+  
+  // componentDidMount() {
+  //   console.log('App componentDidMount');
+  //   const contacts = localStorage.getItem('contacts');
+  //   const parsedContacts = JSON.parse(contacts);
+  //   if (parsedContacts) {
+  //     this.setState({ contacts: parsedContacts });
+  //   }
+  // }
 
-    if (this.state.contacts !== prevState.contacts) {
-      console.log('Обновилось поле contacts');
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log('ComponentDidUpdate');
+
+  //   if (this.state.contacts !== prevState.contacts) {
+  //     console.log('Обновилось поле contacts');
+  //     localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+  //   }
     // console.log(prevState);
     // console.log(this.state);
   }
 
-  onAddContact = contact => {
-    if (this.state.contacts.some(item => item.name === contact.name)) {
+  const onAddContact = contact => {
+    if (contacts.some(item => item.name === contact.name)) {
       alert(`${contact.name} is ready in contacts`);
       return;
     }
 
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, contact],
+    setContacts(prevState => ({
+      return [...prevState, contact],
     }));
   };
 
-  onDeleteContact = contactId => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
-    }));
+  const onDeleteContact = contactId => {
+    setContacts(prevState =>
+      prevState.filter(contact => contact.id !== contactId)
+    );
   };
 
-  onChangeFilter = e => {
-    this.setState({ filter: e.currentTarget.value });
+  const onChangeFilter = e => {
+    setFilter(e.currentTarget.value);
   };
 
-  getAddedContacts = () => {
-    const { filter, contacts } = this.state;
+  const getAddedContacts = () => {
+    // const { filter, contacts } = this.state;
     const toLowerCaseFilter = filter.toLocaleLowerCase();
     return contacts.filter(contact =>
       contact.name.toLocaleLowerCase().includes(toLowerCaseFilter)
     );
   };
 
-  render() {
-    console.log('App render');
+  // render() {
+  //   console.log('App render');
     return (
       <div
         style={{
@@ -75,16 +78,15 @@ export class App extends Component {
         }}
       >
         <h1>Phonebook</h1>
-        <InputForm onSubmit={this.onAddContact} />
+        <InputForm onSubmit={onAddContact} />
         <h2>Contacts</h2>
-        <Filter value={this.state.filter} onChange={this.onChangeFilter} />
+        <Filter value={filter} onChange={onChangeFilter} />
         <ContactList
-          contacts={this.getAddedContacts()}
-          deleteCont={this.onDeleteContact}
+          contacts={getAddedContacts()}
+          deleteCont={onDeleteContact}
           // contactsArr={this.getAddedContacts()}
           // deleteContact={this.onDeleteContact}
         />
       </div>
     );
-  }
-}
+  };

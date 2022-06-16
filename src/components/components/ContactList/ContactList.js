@@ -1,20 +1,20 @@
-import React from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import style from './ContactList.module.css';
 import ContactListItem from './ContactListItem';
 
-const ContactList = ({ contacts, deleteCont }) => {
+export const ContactList = ({ contacts, deleteCont }) => {
   return (
     <ul className={style.contactBlock}>
-      {contacts.map(contact => (
-        <ContactListItem
-          key={contact.id}
-          id={contact.id}
-          name={contact.name}
-          number={contact.number}
-          deleteCont={deleteCont}
-        />
-      ))}
+      {contacts.length > 0 &&
+        contacts.map(({ name, number, id }) => (
+          <ContactListItem
+            key={id}
+            id={id}
+            name={name}
+            number={number}
+            deleteCont={deleteCont}
+          />
+        ))}
     </ul>
   );
 };
@@ -46,8 +46,14 @@ const ContactList = ({ contacts, deleteCont }) => {
 // };
 
 ContactList.propTypes = {
-  contacts: propTypes.array.isRequired,
-  deleteCont: propTypes.func.isRequired,
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+    })
+  ),
+  deleteCont: PropTypes.func.isRequired,
 };
 
 // ContactList.propTypes = {
@@ -60,4 +66,4 @@ ContactList.propTypes = {
 //   ),
 // };
 
-export default ContactList;
+// export default ContactList;
