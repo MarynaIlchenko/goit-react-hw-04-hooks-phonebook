@@ -5,37 +5,47 @@ import { InputForm } from './InputForm';
 import { ContactList } from './ContactList';
 import * as localStorage from './utils/localStorage';
 import { Filter } from './Filter';
+import { nanoid } from 'nanoid';
 
-const CONTACTS_KEY = 'contacts';
+// const CONTACTS_KEY = 'contacts';
 
-export const App = () => {
-  const [contacts, setContacts] = useState(localStorage.read(CONTACTS_KEY));
+export default function App() {
+  const [contacts, setContacts] = useState(() => {
+    return JSON.parse(localStorage.read('contacts')) ?? [];
+  });
   const [filter, setFilter] = useState('');
 
-  useEffect(() => {
-    localStorage.save(CONTACTS_KEY, contacts);
-  }, [contacts]);
+  const onAddContact = (name, number) => {
+    const contact = {
+      id: nanoid(),
+      name: name,
+      number: number,
+    };
 
-  const onAddContact = contact => {
-    if (contacts.some(item => item.name === contact.name)) {
-      alert(`${contact.name} is ready in contacts`);
-      return;
+    const contactsArray = contacts;
+    const isFindContact = contactsArray.find(contact => contact.name === name);
+    if (isFindContact) {
+      alert(`${name} is ready in contacts`);
+    } else {
+      setContacts([...contacts, contact]);
     }
-
-    setContacts(prevState => {
-      return [...prevState, contact];
-    });
   };
 
+  // setContacts(prevState => {
+  //   return [...prevState, contact];
+  // });
+
   const onDeleteContact = contactId => {
-    setContacts(prevState =>
-      prevState.filter(contact => contact.id !== contactId)
-    );
+    setContacts(contacts.filter(contact => contact.id !== contactId));
   };
 
   const onChangeFilter = event => {
     setFilter(event.currentTarget.value);
   };
+
+  useEffect(() => {
+    localStorage.save('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const getAddedContacts = () => {
     const toLowerCaseFilter = filter.toLocaleLowerCase();
@@ -44,7 +54,6 @@ export const App = () => {
     );
   };
 
-  // render() {
   return (
     <div
       style={{
@@ -61,12 +70,11 @@ export const App = () => {
       <h2>Contacts</h2>
       <Filter value={filter} onChange={onChangeFilter} />
       <ContactList
-        contacts={getAddedContacts()}
+        contacts={getAddedContacts}
         deleteCont={onDeleteContact}
         // contactsArr={this.getAddedContacts()}
         // deleteContact={this.onDeleteContact}
       />
     </div>
   );
-};
-// }
+}
