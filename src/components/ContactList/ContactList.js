@@ -2,20 +2,22 @@ import PropTypes from 'prop-types';
 import style from './ContactList.module.css';
 import { ContactListItem } from './ContactListItem';
 
-export const ContactList = ({ contacts, deleteCont }) => {
+export const ContactList = ({ contactsArr, deleteContact }) => {
   return (
-    <ul className={style.contactBlock}>
-      {contacts.length > 0 &&
-        contacts.map(({ name, number, id }) => (
-          <ContactListItem
-            key={id}
-            id={id}
-            name={name}
-            number={number}
-            deleteCont={deleteCont}
-          />
-        ))}
-    </ul>
+    <div>
+      <ul className={style.contactBlock}>
+        {contactsArr.length > 0 &&
+          contactsArr.map(({ name, number, id }) => (
+            <ContactListItem
+              key={id}
+              id={id}
+              name={name}
+              number={number}
+              deleteContact={deleteContact}
+            />
+          ))}
+      </ul>
+    </div>
   );
 };
 
@@ -46,24 +48,12 @@ export const ContactList = ({ contacts, deleteCont }) => {
 // };
 
 ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
+  contactsArr: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       number: PropTypes.string.isRequired,
       id: PropTypes.string.isRequired,
     })
   ),
-  deleteCont: PropTypes.func.isRequired,
+  deleteContact: PropTypes.func.isRequired,
 };
-
-// ContactList.propTypes = {
-//   contactsArr: propTypes.arrayOf(
-//     propTypes.shape({
-//       name: propTypes.string.isRequired,
-//       number: propTypes.string.isRequired,
-//       id: propTypes.string.isRequired,
-//     })
-//   ),
-// };
-
-// export default ContactList;

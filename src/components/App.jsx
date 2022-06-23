@@ -9,9 +9,7 @@ import { Filter } from './Filter';
 const CONTACTS_KEY = 'contacts';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    return JSON.parse(localStorage.read('contacts')) ?? [];
-  });
+  const [contacts, setContacts] = useState(localStorage.read(CONTACTS_KEY));
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
@@ -23,12 +21,11 @@ export const App = () => {
       alert(`${contact.name} is already in contacts`);
       return;
     }
+
     setContacts(prevState => {
       return [...prevState, contact];
     });
   };
-
-  const onChangeFilter = event => setFilter(event.currentTarget.value);
 
   const onDeleteContact = contactId => {
     setContacts(prevState =>
@@ -36,9 +33,14 @@ export const App = () => {
     );
   };
 
-  const getAddedContacts = (contacts, filter) => {
+  const onChangeFilter = event => {
+    setFilter(event.currentTarget.value);
+  };
+
+  const getAddedContacts = () => {
+    const toLowerCaseFilter = filter.toLocaleLowerCase();
     return contacts.filter(contact =>
-      contact.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase())
+      contact.name.toLocaleLowerCase().includes(toLowerCaseFilter)
     );
   };
 
@@ -58,7 +60,7 @@ export const App = () => {
       <h2>Contacts</h2>
       <Filter value={filter} onChange={onChangeFilter} />
       <ContactList
-        contactsArr={getAddedContacts(contacts, filter)}
+        contactsArr={getAddedContacts}
         deleteContact={onDeleteContact}
       />
     </div>

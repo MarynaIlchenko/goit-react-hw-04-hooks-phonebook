@@ -37,8 +37,6 @@ export const InputForm = ({ onSubmit }) => {
     event.currentTarget.reset();
   };
 
-  // render() {
-  //   const { name, number } = this.state;
   return (
     <form onSubmit={onSubmitForm} className={style.form}>
       <label className={style.label}>
