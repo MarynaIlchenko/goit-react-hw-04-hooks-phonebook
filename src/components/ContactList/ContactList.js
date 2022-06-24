@@ -48,7 +48,7 @@ export const ContactList = ({ contactsArr, deleteContact }) => {
 // };
 
 ContactList.propTypes = {
-  contactsArr: PropTypes.arrayOf(
+  contacts: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       number: PropTypes.string.isRequired,

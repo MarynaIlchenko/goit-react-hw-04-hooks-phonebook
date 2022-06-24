@@ -5,7 +5,6 @@ import { InputForm } from './InputForm';
 import { ContactList } from './ContactList';
 import * as localStorage from './utils/localStorage';
 import { Filter } from './Filter';
-
 const CONTACTS_KEY = 'contacts';
 
 export const App = () => {
@@ -17,10 +16,11 @@ export const App = () => {
   }, [contacts]);
 
   const onAddContact = contact => {
-    if (contacts.some(item => item.name === contact.name)) {
+    if (contacts.some(item => item.name === contacts.name)) {
       alert(`${contact.name} is already in contacts`);
       return;
     }
+    console.log(onAddContact);
 
     setContacts(prevState => {
       return [...prevState, contact];
@@ -43,7 +43,6 @@ export const App = () => {
       contact.name.toLocaleLowerCase().includes(toLowerCaseFilter)
     );
   };
-
   return (
     <div
       style={{
