@@ -1,51 +1,26 @@
 import PropTypes from 'prop-types';
-import style from './ContactList.module.css';
-import { ContactListItem } from './ContactListItem';
+import { ContactListItem } from './ContactListItem/ContactListItem';
+import styles from './ContactList.module.css';
 
-export const ContactList = ({ contactsArr, deleteContact }) => {
+export const ContactList = ({ contacts, deleteContact }) => {
   return (
     <div>
-      <ul className={style.contactBlock}>
-        {contactsArr.length > 0 &&
-          contactsArr.map(({ name, number, id }) => (
-            <ContactListItem
-              key={id}
-              id={id}
-              name={name}
-              number={number}
-              deleteContact={deleteContact}
-            />
-          ))}
+      <ul className={styles.section}>
+        {contacts.length
+          ? contacts.map(({ name, number, id }) => (
+              <ContactListItem
+                key={id}
+                name={name}
+                number={number}
+                id={id}
+                deleteContact={deleteContact}
+              />
+            ))
+          : 'No contacts'}
       </ul>
     </div>
   );
 };
-
-// const ContactList = ({ contactsArr, deleteContact }) => {
-//   return (
-//     <div>
-//       <ul className={style.listBlock}>
-//         {contactsArr.length > 0 &&
-//           contactsArr.map(({ name, number, id }) => {
-//             return (
-//               <li className={style.list} key={id}>
-//                 <p>
-//                   {name} : {number}
-//                 </p>
-//                 <button
-//                   type="button"
-//                   className={style.button}
-//                   onClick={() => deleteContact(id)}
-//                 >
-//                   Delete
-//                 </button>
-//               </li>
-//             );
-//           })}
-//       </ul>
-//     </div>
-//   );
-// };
 
 ContactList.propTypes = {
   contacts: PropTypes.arrayOf(

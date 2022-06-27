@@ -1,5 +1,7 @@
-.contactBlock {
-  list-style-type: none;
-  margin-left: 0;
-  padding-left: 0;
+.section {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  /* margin-top: 25px; */
+  padding: 20px;
 }

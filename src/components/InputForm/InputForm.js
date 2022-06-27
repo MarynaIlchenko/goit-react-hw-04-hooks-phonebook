@@ -1,77 +1,65 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
-import style from './InputForm.module.css';
 import { nanoid } from 'nanoid';
+import PropTypes from 'prop-types';
+import styles from './InputForm.module.css';
 
-export const InputForm = ({ onSubmit }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+export const InputForm = ({ onSubmitData }) => {
+  const [form, setForm] = useState({ name: '', number: '' });
 
-  // static propTypes = {
-  //   onSubmitForm: PropTypes.func,
-  // };
-
-  const onChangeInput = event => {
-    const { name, value } = event.target;
-    if (name === 'name') {
-      setName(value);
-    }
-    if (name === 'number') {
-      setNumber(value);
-    }
+  const handleChange = element => {
+    const { name, value } = element.currentTarget;
+    setForm(prevForm => ({ ...prevForm, [name]: value }));
   };
 
-  const onSubmitForm = event => {
-    event.preventDefault();
-    onSubmit({
-      name: name,
-      number: number,
-      id: nanoid(),
-    });
-    reset(event);
+  const handleSubmit = element => {
+    element.preventDefault();
+    const data = { id: nanoid(), ...form };
+    onSubmitData(data);
+    inputClean();
   };
 
-  const reset = event => {
-    setName('');
-    setNumber('');
-    event.currentTarget.reset();
+  const inputClean = () => {
+    setForm({ name: '', number: '' });
   };
 
+  const { name, number } = form;
   return (
-    <form onSubmit={onSubmitForm} className={style.form}>
-      <label className={style.label}>
-        Name
-        <input
-          className={style.input}
-          value={name}
-          type="text"
-          name="name"
-          required
-          onChange={onChangeInput}
-        />
-      </label>
-
-      <label className={style.label}>
-        Number
-        <input
-          className={style.input}
-          value={number}
-          type="tel"
-          name="number"
-          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-          required
-          onChange={onChangeInput}
-        />
-      </label>
-      <button className={style.button} type="submit">
-        Add contact
-      </button>
-    </form>
+    <div className={styles.section}>
+      <form onSubmit={handleSubmit}>
+        <label className={styles.label}>
+          Name
+          <input
+            className={styles.input}
+            type="text"
+            name="name"
+            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+            required
+            value={name}
+            onChange={handleChange}
+          />
+        </label>
+        <label className={styles.label}>
+          Number
+          <input
+            className={styles.input}
+            type="tel"
+            name="number"
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            required
+            value={number}
+            onChange={handleChange}
+          />
+        </label>
+        <button type="submit" className={styles.button}>
+          Add contact
+        </button>
+      </form>
+    </div>
   );
 };
 
 InputForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
+  onSubmitData: PropTypes.func.isRequired,
 };
-// export default InputForm;
